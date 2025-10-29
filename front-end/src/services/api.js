@@ -3,7 +3,7 @@ export async function apiFetch(path, options = {}) {
   const base = process.env.NEXT_PUBLIC_API_BASE_URL || "https://greenrise-by-ceres.onrender.com"; // ex.: http://localhost:4000
   // pegue o token do localStorage (ou use um token fixo em env pública se quiser)
   const lsToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const envToken = process.env.NEXT_PUBLIC_STATIC_TOKEN; // opcional
+  const envToken = process.env.NEXT_PUBLIC_STATIC_TOKEN; // opcionall
   const token = lsToken || envToken;
 
   const headers = {
