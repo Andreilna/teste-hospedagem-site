@@ -19,10 +19,16 @@ import cors from "cors";
 
 // Se NÃO usa cookies/sessão:
 app.use(cors({
-  origin: "http://localhost:3000",     // URL do seu front
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
+  origin: [
+    "http://localhost:3000",                      // ambiente local
+    "https://greenrise.vercel.app",               // site em produção
+    "https://equipe-ceres.vercel.app"             // outro domínio, se também usa
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
+
 
 //Importando mongoose
 import moongoose from './config/db-connections.js'
