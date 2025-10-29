@@ -20,14 +20,15 @@ import cors from "cors";
 // Se NÃO usa cookies/sessão:
 app.use(cors({
   origin: [
-    "http://localhost:3000",                      // ambiente local
-    "https://greenrise.vercel.app",               // site em produção
-    "https://equipe-ceres.vercel.app"             // outro domínio, se também usa
+    "http://localhost:3000",                // pra testar localmente
+    "https://greenrise.vercel.app",         // front hospedado na Vercel
+    "https://equipe-ceres.vercel.app"       // se esse também acessa
   ],
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"],
   credentials: true
 }));
+
 
 
 //Importando mongoose
