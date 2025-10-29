@@ -1,0 +1,247 @@
+.hortaPage {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #ecfdf5, #ffffff);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+
+  /* Variáveis locais ao wrapper (não global) */
+  --emerald-900: #064e3b;
+  --emerald-800: #065f46;
+  --emerald-700: #047857;
+  --emerald-600: #059669;
+  --emerald-100: #d1fae5;
+
+  --red-600: #dc2626;
+  --gray-700: #374151;
+  --white: #ffffff;
+}
+
+.hortaCard {
+  width: 100%;
+  max-width: 880px;
+  background: var(--white);
+  border: 1px solid #c7f3df;
+  border-radius: 18px;
+  padding: 24px 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--emerald-100);
+  color: var(--emerald-700);
+  font-size: 22px;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  color: var(--emerald-900);
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #2f7a5e;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+@media (min-width: 820px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-size: 14px;
+  color: var(--emerald-900);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.req {
+  color: #e11d48;
+}
+
+.input {
+  border: 1px solid #bfead6;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 15px;
+  outline: none;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .02);
+}
+
+.input:focus {
+  border-color: #6ee7b7;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, .22);
+}
+
+.isError {
+  border-color: #fca5a5 !important;
+  box-shadow: 0 0 0 3px rgba(252, 165, 165, .35) !important;
+}
+
+.help {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.error {
+  color: var(--red-600);
+}
+
+.rangeLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--emerald-100);
+  color: var(--emerald-800);
+  font-weight: 700;
+}
+
+.range {
+  width: 100%;
+}
+
+.fert {
+  margin-top: 20px;
+}
+
+.fertHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.fertList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fertRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .15s ease;
+}
+
+.primary {
+  background: var(--emerald-600);
+  color: #fff;
+}
+.primary:hover {
+  background: #067f5e;
+}
+
+.secondary {
+  background: #fff;
+  color: var(--emerald-800);
+  border-color: #a7e9d1;
+}
+.secondary:hover {
+  background: #f3fbf8;
+}
+
+.ghost {
+  background: #effcf6;
+  color: var(--emerald-700);
+  border-color: #b6eed9;
+}
+.ghost:hover {
+  background: #e3fbf1;
+}
+
+.icon {
+  padding: 9px 11px;
+}
+
+.danger {
+  background: #fff5f5;
+  border-color: #fecaca;
+  color: var(--red-600);
+}
+.danger:hover {
+  background: #ffe9e9;
+}
+
+.foot {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #2f7a5e;
+}
+
+.waterLevelInfo {
+  color: #3498db;
+  font-weight: 500;
+  display: block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #f0f8ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 6px;
+}

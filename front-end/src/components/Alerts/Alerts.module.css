@@ -1,0 +1,161 @@
+.container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: #212121;
+  height: fit-content;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.headerIcon {
+  font-size: 18px;
+  color: #FF6B35;
+}
+
+.title {
+  font-weight: 700;
+  margin: 0;
+  color: #212121;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.vegetableName {
+  color: #27ae60;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 14px;
+}
+
+.alertsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alertCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  border-left: 4px solid;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.alertCard:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.alertIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+.alertContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.alertTitle {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0;
+}
+
+.alertDescription {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.alertTime {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.timeIcon {
+  font-size: 10px;
+}
+
+.warning {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-left-color: #ffc107;
+  color: #856404;
+}
+
+.warning .alertIcon {
+  background: rgba(255, 193, 7, 0.2);
+}
+
+.warning .icon {
+  color: #ffc107;
+}
+
+.danger {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  border-left-color: #dc3545;
+  color: #721c24;
+}
+
+.danger .alertIcon {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.danger .icon {
+  color: #dc3545;
+}
+
+.info {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  border-left-color: #17a2b8;
+  color: #0c5460;
+}
+
+.info .alertIcon {
+  background: rgba(23, 162, 184, 0.2);
+}
+
+.info .icon {
+  color: #17a2b8;
+}
+
+.success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border-left-color: #28a745;
+  color: #155724;
+}
+
+.success .alertIcon {
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.success .icon {
+  color: #28a745;
+}

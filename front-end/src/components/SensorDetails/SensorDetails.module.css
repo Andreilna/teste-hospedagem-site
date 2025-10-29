@@ -1,0 +1,222 @@
+.container {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  flex: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  height: 450px; /* pedido do usuário */
+  overflow: hidden; /* evita “vazar” conteúdo quando o grid rola */
+}
+
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f5f5f5;
+  min-height: 48px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0; /* habilita truncamento */
+  flex: 1;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  flex-shrink: 0;
+}
+
+.headerIcon {
+  font-size: 20px;
+  color: white;
+}
+
+.headerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 700;
+  margin: 0;
+  color: #212121;
+  font-size: clamp(14px, 1.2vw, 16px);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vegetableName {
+  color: #27ae60;
+  font-weight: 600;
+  text-transform: none;
+  font-size: clamp(12px, 1.1vw, 14px);
+}
+
+.subtitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: clamp(11px, 1vw, 12px);
+  color: #666;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.subtitleIcon {
+  font-size: 12px;
+}
+
+/* GRID COM SCROLL INTERNO */
+.sensorsGrid {
+  display: flex;
+  flex-direction: column;   /* <<< empilha verticalmente */
+  gap: 16px;
+  padding-right: 8px;
+
+  flex: 1;
+  overflow: auto;           /* scroll interno se precisar */
+  max-height: calc(100% - 80px);
+  overscroll-behavior: contain;
+}
+
+/* Ajuste progressivo com media queries */
+@media (max-width: 1280px) {
+  .sensorsGrid { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+@media (max-width: 992px) {
+  .sensorsGrid { grid-template-columns: repeat(2, minmax(170px, 1fr)); }
+}
+@media (max-width: 600px) {
+  .sensorsGrid { grid-template-columns: 1fr; }
+}
+
+/* Scrollbar custom */
+.sensorsGrid::-webkit-scrollbar { width: 6px; height: 6px; }
+.sensorsGrid::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+.sensorsGrid::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+.sensorsGrid::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+/* CARDS */
+.sensorCard {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: clamp(14px, 1.4vw, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  min-height: 160px;
+}
+
+.sensorCard:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.sensorIcon {
+  font-size: clamp(1.6rem, 2.2vw, 2.5rem);
+  color: #667eea;
+  margin-bottom: 10px;
+  transition: transform 0.25s ease;
+}
+
+.sensorCard:hover .sensorIcon { transform: scale(1.06); }
+
+.sensorContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.sensorLabel {
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  color: #6c757d;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.sensorValue {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+  color: #212121;
+  margin-bottom: 6px;
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.sensorStatus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: clamp(0.7rem, 0.95vw, 0.85rem);
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.statusIcon { font-size: 0.95em; }
+
+/* LOADING */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: #7f8c8d;
+  font-size: 14px;
+  font-style: italic;
+  flex: 0 0 auto;
+}
+
+/* MOBILE REFINES */
+@media (max-width: 768px) {
+  .container { padding: 16px; }
+  .header { padding-bottom: 10px; }
+  .headerLeft { gap: 10px; }
+
+  .iconContainer {
+    width: 38px; height: 38px; border-radius: 10px;
+  }
+  .headerIcon { font-size: 18px; }
+
+  .sensorCard { min-height: 120px; }
+}
+
+/* Extra pequeno */
+@media (max-width: 480px) {
+  .sensorCard { min-height: 110px; }
+}
+
+/* Usuários que preferem menos animação */
+@media (prefers-reduced-motion: reduce) {
+  .sensorCard,
+  .sensorIcon {
+    transition: none;
+  }
+}

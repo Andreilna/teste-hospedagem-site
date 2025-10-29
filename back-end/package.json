@@ -1,0 +1,38 @@
+{
+  "name": "greenrise",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "",
+    "start": "npx nodemon index.js",
+    "clean": "node clear-cache.js"
+  },
+  "keywords": [
+    "fazendas",
+    "verticais",
+    "inteligência",
+    "artificial",
+    "ODS",
+    "Vertical",
+    "farms",
+    "artificial",
+    "intelligence",
+    "SDG"
+  ],
+  "author": "Araujo, A, Santos, E, Sueoka, L, Estevam, R",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.18.3",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.10"
+  }
+}

@@ -1,0 +1,100 @@
+:root {
+  --sidebar-w: 220px;
+  --sidebar-w-collapsed: 72px;
+  --accent: #4CAF50;
+  --text: #212121;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;      /* top:0; right:auto; bottom:0; left:0 */
+  width: var(--sidebar-w);
+  height: 100dvh;
+  background-color: #f5f7fa;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  font-size: 14px;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.menuWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.menuItem {
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.menuItem:hover {
+  color: var(--accent);
+  background-color: #e0f2f1;
+}
+
+/* Links ocupam o espaço e não quebram layout */
+.link {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ====== Estado colapsado (<= 1024px) ====== */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: var(--sidebar-w-collapsed);
+    padding: 16px 10px;
+  }
+  .menuItem {
+    justify-content: center;
+    gap: 0;
+    padding: 10px 8px;
+  }
+  /* esconde texto e deixa só os ícones */
+  .link {
+    display: none;
+  }
+  .logo {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+}
+
+/* Telefones pequenos: apertar um pouquinho mais */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 64px;
+  }
+}

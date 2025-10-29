@@ -1,0 +1,87 @@
+/* ====== Tema básico ====== */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+/* ====== Reset e base ====== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Evita zoom automático em iOS e garante altura correta em mobile */
+  -webkit-text-size-adjust: 100%;
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  /* Use min-height pra evitar “duplo scroll” que o 100% causava */
+  min-height: 100dvh;
+  background: #e5edf5; /* fundo padrão */
+  color: var(--foreground);
+  font-family: Arial, sans-serif;
+  line-height: 1.4;
+  overflow-x: hidden; /* bloqueia qualquer vazamento horizontal */
+}
+
+/* ⚠️ IMPORTANTE: não force flex global no app */
+/* Remova o display:flex que estava quebrando outras páginas */
+#__next {
+  min-height: 100dvh;   /* garante que ocupe a tela inteira */
+  display: block;       /* padrão “normal”, não afeta outras rotas */
+}
+
+/* Links e elementos fluidos */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Inputs legíveis e sem zoom estranho em iOS */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove margens colapsadas automáticas de elementos tipográficos */
+h1, h2, h3, h4, h5, h6, p,
+ul, ol, figure {
+  margin: 0;
+  padding: 0;
+}
+
+/* Container utilitário opcional (se quiser usar em páginas simples) */
+.container {
+  width: min(1100px, 100%);
+  margin-inline: auto;
+  padding-inline: 16px;
+  padding-block: 16px;
+}
+
+/* Util: evita que grids e cards “estourem” largura */
+.minw-0 { min-width: 0; }

@@ -1,0 +1,98 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.icon {
+  font-size: 24px;
+  color: white;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+.statusIcon {
+  font-size: 14px;
+}
+
+.blue {
+  background: linear-gradient(135deg, #1976D2, #1565C0);
+}
+
+.green {
+  background: linear-gradient(135deg, #388E3C, #2E7D32);
+}
+
+.yellow {
+  background: linear-gradient(135deg, #FFA000, #FF8F00);
+}
+
+.purple {
+  background: linear-gradient(135deg, #7B1FA2, #6A1B9A);
+}
+
+.orange {
+  background: linear-gradient(135deg, #FF7043, #FF5722);
+}
+
+.teal {
+  background: linear-gradient(135deg, #00796B, #00695C);
+}
