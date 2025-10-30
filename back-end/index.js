@@ -1,4 +1,4 @@
-import 'dotenv/config'; // ✅ Carrega variáveis de ambiente (.env)
+import 'dotenv/config';
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -14,29 +14,33 @@ import moongoose from "./config/db-connections.js";
 
 const app = express();
 
-// ✅ Middleware CORS manual (funciona mesmo quando o Render bloqueia preflight)
+// ⚡ CORS — versão totalmente compatível com Render + Vercel
+const allowedOrigins = [
+  "https://greenrise-by-ceres.vercel.app",
+  "http://localhost:3000"
+];
+
 app.use((req, res, next) => {
-  const allowedOrigins = [
-    "https://greenrise-by-ceres.vercel.app",
-    "http://localhost:3000"
-  ];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
   }
-
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
 
   if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
+    return res.sendStatus(204); // 🧠 responde antes de cair nas rotas
   }
 
   next();
 });
 
-// ✅ Middleware padrão do Express
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -81,12 +85,12 @@ app.use((req, res) => {
   });
 });
 
-// ✅ Porta configurável via Render (ou 4000 local)
+// ✅ Porta configurável via Render
 const port = process.env.PORT || 4000;
 app.listen(port, (error) => {
   if (error) {
     console.error(`❌ Erro na porta ${port}`, error);
   } else {
-    console.log(`✅ API Greenrise Back-end rodando em http://localhost:${port}`);
+    console.log(`✅ API Greenrise rodando na porta ${port}`);
   }
 });
