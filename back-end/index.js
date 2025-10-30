@@ -1,86 +1,86 @@
-import 'dotenv/config'; // ✅ CARREGAR VARIÁVEIS DE AMBIENTE (.ENV)
+import 'dotenv/config'; // ✅ Carregar variáveis de ambiente (.env)
 import express from "express";
-const app = express();
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Importar conexões e modelos
+import mongooseConnection from "./config/db-connections.js";
 import Hortalica from "./models/Hortalica.js";
 import User from "./models/User.js";
+
+// Importar rotas
 import userRoutes from "./routes/userRoutes.js";
 import hortalicaRoutes from "./routes/hortalicaRoutes.js";
 import waterLevelRoutes from "./routes/waterLevelRoutes.js";
-import path from "path"; 
-import { fileURLToPath } from 'url';
 
-import cookieParser from "cookie-parser";
+const app = express();
+
+// ✅ Middlewares
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-import cors from "cors";
-
-
-
-
-// Se NÃO usa cookies/sessão:
+// ✅ Configuração CORS (aceita acesso do front-end da Vercel)
 app.use(cors({
   origin: [
-    "http://localhost:3000",                // pra testar localmente
-    "https://greenrise.vercel.app",         // front hospedado na Vercel
-    "https://equipe-ceres.vercel.app"       // se esse também acessa
+    "http://localhost:3000",                // Para teste local
+    "https://greenrise.vercel.app",         // Caso use este domínio
+    "https://greenrise-by-ceres.vercel.app",// Front hospedado
+    "https://equipe-ceres.vercel.app"       // Outro domínio vinculado
   ],
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
+// ✅ Rotas principais
+app.use("/", userRoutes);
+app.use("/", hortalicaRoutes);
+app.use("/", waterLevelRoutes);
 
-
-//Importando mongoose
-import moongoose from './config/db-connections.js'
-
-
-
-
-//Configurações do Express
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use("/", userRoutes)
-app.use("/", hortalicaRoutes)
-app.use("/", waterLevelRoutes)
-
-// ✅ Caminho absoluto para static files
+// ✅ Caminho absoluto para arquivos estáticos (uploads)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const staticPath = path.join(__dirname, '..', 'front-end', 'uploads');
+const staticPath = path.join(__dirname, "..", "front-end", "uploads");
 
 app.use("/uploads", express.static(staticPath));
-console.log("🔍 Servindo arquivos estáticos de:", staticPath);
+console.log("📂 Servindo arquivos estáticos de:", staticPath);
 
-//Criando retorno da API para tudo junto (rota direta pelo index)
+// ✅ Rota principal
 app.get("/", async (req, res) => {
-try {
-const users = await User.find();
-const hortalicas = await Hortalica.find();
-res.status(200).json({ message: "✅ Rota Index Funcionando", users, hortalicas });
-} catch (error) {
-console.log(error);
-res.status(500).json({ error: "❌ Erro interno do servidor requisição tudo junto" });
- }
+  try {
+    const users = await User.find();
+    const hortalicas = await Hortalica.find();
+    res.status(200).json({
+      message: "✅ Rota Index Funcionando",
+      users,
+      hortalicas
+    });
+  } catch (error) {
+    console.error("❌ Erro interno do servidor:", error);
+    res.status(500).json({ error: "❌ Erro interno do servidor (rota /)" });
+  }
 });
 
 // ✅ Middleware para rotas não encontradas
 app.use((req, res) => {
-    console.log(`❌ Rota não encontrada: ${req.method} ${req.originalUrl}`);
-    
-    res.status(404).json({
-        success: false,
-        error: "Rota não encontrada",
-        message: `A rota ${req.method} ${req.originalUrl} não existe`,
-        timestamp: new Date().toISOString(),
-    });
+  console.log(`⚠️ Rota não encontrada: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({
+    success: false,
+    error: "Rota não encontrada",
+    message: `A rota ${req.method} ${req.originalUrl} não existe`,
+    timestamp: new Date().toISOString(),
+  });
 });
 
-//Rodando API na porta 4000
-const port = 4000;
+// ✅ Inicializar servidor
+const port = process.env.PORT || 4000;
 app.listen(port, (error) => {
-if (error) {
-    console.log(`❌ Erro na porta 4000`, error);
-}
-console.log(`✅ API Greenrise Back-end rodando em http://localhost:${port}`);
+  if (error) {
+    console.error("❌ Erro ao iniciar servidor:", error);
+  } else {
+    console.log(`✅ API Greenrise rodando em http://localhost:${port}`);
+  }
 });
