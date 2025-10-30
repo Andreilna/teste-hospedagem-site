@@ -1,52 +1,58 @@
-import 'dotenv/config'; // ✅ Carregar variáveis de ambiente (.env)
+import 'dotenv/config'; // ✅ Carrega variáveis de ambiente (.env)
 import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
-// Importar conexões e modelos
-import mongooseConnection from "./config/db-connections.js";
 import Hortalica from "./models/Hortalica.js";
 import User from "./models/User.js";
-
-// Importar rotas
 import userRoutes from "./routes/userRoutes.js";
 import hortalicaRoutes from "./routes/hortalicaRoutes.js";
 import waterLevelRoutes from "./routes/waterLevelRoutes.js";
+import moongoose from "./config/db-connections.js";
 
 const app = express();
 
-// ✅ Middlewares
+// ✅ Middleware CORS manual (funciona mesmo quando o Render bloqueia preflight)
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    "https://greenrise-by-ceres.vercel.app",
+    "http://localhost:3000"
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+// ✅ Middleware padrão do Express
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// ✅ Configuração CORS (aceita acesso do front-end da Vercel)
-app.use(cors({
-  origin: [
-    "http://localhost:3000",                // Para teste local
-    "https://greenrise.vercel.app",         // Caso use este domínio
-    "https://greenrise-by-ceres.vercel.app",// Front hospedado
-    "https://equipe-ceres.vercel.app"       // Outro domínio vinculado
-  ],
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
-
-// ✅ Rotas principais
+// ✅ Suas rotas
 app.use("/", userRoutes);
 app.use("/", hortalicaRoutes);
 app.use("/", waterLevelRoutes);
 
-// ✅ Caminho absoluto para arquivos estáticos (uploads)
+// ✅ Caminho absoluto para arquivos estáticos
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const staticPath = path.join(__dirname, "..", "front-end", "uploads");
 
 app.use("/uploads", express.static(staticPath));
-console.log("📂 Servindo arquivos estáticos de:", staticPath);
+console.log("📁 Servindo arquivos estáticos de:", staticPath);
 
 // ✅ Rota principal
 app.get("/", async (req, res) => {
@@ -59,14 +65,14 @@ app.get("/", async (req, res) => {
       hortalicas
     });
   } catch (error) {
-    console.error("❌ Erro interno do servidor:", error);
-    res.status(500).json({ error: "❌ Erro interno do servidor (rota /)" });
+    console.error(error);
+    res.status(500).json({ error: "❌ Erro interno do servidor (requisição tudo junto)" });
   }
 });
 
 // ✅ Middleware para rotas não encontradas
 app.use((req, res) => {
-  console.log(`⚠️ Rota não encontrada: ${req.method} ${req.originalUrl}`);
+  console.log(`❌ Rota não encontrada: ${req.method} ${req.originalUrl}`);
   res.status(404).json({
     success: false,
     error: "Rota não encontrada",
@@ -75,12 +81,12 @@ app.use((req, res) => {
   });
 });
 
-// ✅ Inicializar servidor
+// ✅ Porta configurável via Render (ou 4000 local)
 const port = process.env.PORT || 4000;
 app.listen(port, (error) => {
   if (error) {
-    console.error("❌ Erro ao iniciar servidor:", error);
+    console.error(`❌ Erro na porta ${port}`, error);
   } else {
-    console.log(`✅ API Greenrise rodando em http://localhost:${port}`);
+    console.log(`✅ API Greenrise Back-end rodando em http://localhost:${port}`);
   }
 });
