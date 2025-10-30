@@ -22,7 +22,7 @@ export default function Login() {
         localStorage.setItem("token", response.data.token);
         Cookies.set("token", response.data.token, { expires: 2 });
 
-        // Redireciona para dashboard
+        // Redireciona para dashboardd
         router.push("/home");
       }
     } catch (err) {
