@@ -72,7 +72,7 @@ export default function App({ Component, pageProps }) {
 
   if (loading) {
     return (
-      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px', color: '#00ff9d' }}>
+      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px', color: '#1b5e20' }}>
         Carregando informações...
       </div>
     );
