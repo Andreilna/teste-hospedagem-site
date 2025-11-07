@@ -3,6 +3,10 @@ import Cookies from "js-cookie";
 
 const api = axios.create({
   baseURL: "https://greenrise-by-ceres.onrender.com", // Backend hospedado
+  withCredentials: true, // Permite envio de cookies
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 api.interceptors.request.use((config) => {
