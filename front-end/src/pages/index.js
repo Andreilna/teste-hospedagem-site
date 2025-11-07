@@ -8,51 +8,71 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // limpa erro antigo
+    setError("");
+    setLoading(true);
 
     try {
       const response = await api.post("/user/login", { email, password });
 
       if (response.data.token) {
-        // Salva token no localStorage e cookie
         localStorage.setItem("token", response.data.token);
         Cookies.set("token", response.data.token, { expires: 2 });
-
-        // Redireciona para dashboardd
         router.push("/home");
       }
     } catch (err) {
       console.error("Erro ao fazer login:", err);
-      // Mensagem amigável de erro
-      setError(
-        err.response?.data?.error || "❌ Usuário ou senha inválidos!"
-      );
+      setError(err.response?.data?.error || "Email ou senha incorretos");
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.container}>
+      {loading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.spinner}></div>
+          <p>Carregando...</p>
+        </div>
+      )}
       <form className={styles.box} onSubmit={handleLogin}>
-        <h2>Login</h2>
+        {/* Logo adicionada aqui */}
+        <img
+          src="/logo.jpg"
+          alt="Logo GreenRise"
+          className={styles.logo}
+        />
+
+        <h2 className={styles.title}>Login - GreenRise</h2>
+
         <input
           type="text"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={styles.input}
           required
+          disabled={loading}
         />
+
         <input
           type="password"
           placeholder="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
           required
+          disabled={loading}
         />
-        <button type="submit">Entrar</button>
+
+        <button type="submit" className={styles.button} disabled={loading}>
+          Entrar
+        </button>
+
         {error && <p className={styles.error}>{error}</p>}
       </form>
     </div>

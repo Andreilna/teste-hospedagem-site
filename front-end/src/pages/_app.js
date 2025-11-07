@@ -19,14 +19,56 @@ export default function App({ Component, pageProps }) {
       return;
     }
 
-    const token = localStorage.getItem('token') || Cookies.get('token');
+    const checkToken = () => {
+      const token = localStorage.getItem('token') || Cookies.get('token');
 
-    if (!token) {
-      router.replace('/login'); // Redireciona se não tiver token
-    } else {
-      setLoading(false); // Token existe, libera acesso
+      if (!token) {
+        router.replace('/'); // Redireciona para / se não tiver token
+        return false;
+      }
+      return true;
+    };
+
+    // Verifica token inicial
+    if (!checkToken()) {
+      return;
     }
+
+    setLoading(false); // Token existe, libera acesso
+
+    // Monitora mudanças no localStorage (para detectar quando token é removido)
+    const handleStorageChange = (e) => {
+      if (e.key === 'token' && !e.newValue) {
+        // Token foi removido
+        router.replace('/');
+      }
+    };
+
+    // Listener para mudanças no localStorage (entre abas)
+    window.addEventListener('storage', handleStorageChange);
+
+    // Monitora mudanças no token periodicamente (para mesma aba)
+    const interval = setInterval(() => {
+      if (!checkToken()) {
+        clearInterval(interval);
+      }
+    }, 2000); // Verifica a cada 2 segundos (menos frequente)
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [router, isPublicPath]);
+
+  // Verifica token sempre que a rota mudar
+  useEffect(() => {
+    if (!isPublicPath) {
+      const token = localStorage.getItem('token') || Cookies.get('token');
+      if (!token) {
+        router.replace('/');
+      }
+    }
+  }, [router.pathname, isPublicPath, router]);
 
   if (loading) {
     return (

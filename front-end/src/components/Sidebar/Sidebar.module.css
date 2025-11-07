@@ -1,16 +1,20 @@
 :root {
   --sidebar-w: 220px;
   --sidebar-w-collapsed: 72px;
-  --accent: #4CAF50;
+  --accent: #1b5e20; /* Verde principal do GreenRise */
+  --accent-light: #a5d6a7;
+  --highlight: #e0b13c; /* Dourado */
   --text: #212121;
+  --bg: #f5f7fa;
 }
 
+/* ===== Sidebar Principal ===== */
 .sidebar {
   position: fixed;
-  inset: 0 auto 0 0;      /* top:0; right:auto; bottom:0; left:0 */
+  inset: 0 auto 0 0;
   width: var(--sidebar-w);
   height: 100dvh;
-  background-color: #f5f7fa;
+  background-color: var(--bg);
   border-right: 1px solid #ddd;
   padding: 20px;
   font-size: 14px;
@@ -21,13 +25,21 @@
   z-index: 1000;
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
+/* ===== Logo ===== */
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 20px;
-  color: var(--accent);
 }
 
+.logo {
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+/* ===== Menu ===== */
 .menuWrapper {
   flex: 1;
   display: flex;
@@ -44,7 +56,7 @@
 }
 
 .menuItem {
-  margin: 12px 0;
+  margin: 10px 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -57,10 +69,9 @@
 
 .menuItem:hover {
   color: var(--accent);
-  background-color: #e0f2f1;
+  background-color: var(--accent-light);
 }
 
-/* Links ocupam o espaço e não quebram layout */
 .link {
   text-decoration: none;
   color: inherit;
@@ -71,30 +82,133 @@
   text-overflow: ellipsis;
 }
 
-/* ====== Estado colapsado (<= 1024px) ====== */
+/* ===== Item de logout ===== */
+.logout {
+  color: #b71c1c;
+  margin-top: 40px;
+}
+
+.logout:hover {
+  background-color: #ffebee;
+  color: #b71c1c;
+}
+
+/* ===== Estado colapsado (<= 1024px) ===== */
 @media (max-width: 1024px) {
   .sidebar {
     width: var(--sidebar-w-collapsed);
     padding: 16px 10px;
   }
+
   .menuItem {
     justify-content: center;
     gap: 0;
     padding: 10px 8px;
   }
-  /* esconde texto e deixa só os ícones */
+
   .link {
     display: none;
   }
+
   .logo {
-    font-size: 18px;
-    margin-bottom: 10px;
+    width: 48px !important;
+    height: 48px !important;
   }
 }
 
-/* Telefones pequenos: apertar um pouquinho mais */
+/* ===== Telefones pequenos ===== */
 @media (max-width: 480px) {
   .sidebar {
     width: 64px;
+  }
+}
+
+/* ======== POPUP DE CONFIRMAÇÃO ======== */
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.confirmBox {
+  background: white;
+  border-radius: 16px;
+  padding: 30px 25px;
+  max-width: 320px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: scaleIn 0.25s ease;
+}
+
+.confirmTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1b5e20;
+  margin-bottom: 15px;
+}
+
+.confirmText {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.confirmButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.confirmBtn {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirmBtn.cancel {
+  background: #ccc;
+  color: #333;
+}
+
+.confirmBtn.cancel:hover {
+  background: #bbb;
+}
+
+.confirmBtn.confirm {
+  background: #1b5e20;
+  color: white;
+}
+
+.confirmBtn.confirm:hover {
+  background: #2e7d32;
+}
+
+/* ===== Animações ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }

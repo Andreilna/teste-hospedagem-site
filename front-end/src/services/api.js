@@ -14,6 +14,18 @@ function getToken() {
   return process.env.NEXT_PUBLIC_STATIC_TOKEN || null;
 }
 
+// Função para limpar token e redirecionar
+function handleUnauthorized() {
+  if (typeof window !== "undefined") {
+    // Limpa token do localStorage e cookie
+    localStorage.removeItem("token");
+    document.cookie = "token=; max-age=0; path=/; HttpOnly";
+    
+    // Redireciona para a página de login
+    window.location.href = "/";
+  }
+}
+
 // Função base de fetch
 export async function apiFetch(path, options = {}) {
   const token = getToken();
@@ -26,6 +38,12 @@ export async function apiFetch(path, options = {}) {
 
   const response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
   const data = await response.json().catch(() => ({}));
+
+  // Se receber erro 401 (não autorizado), token inválido ou expirado
+  if (response.status === 401) {
+    handleUnauthorized();
+    throw new Error(data?.error || "Token inválido ou expirado");
+  }
 
   if (!response.ok) throw new Error(data?.error || `Erro ${response.status}`);
   return data;

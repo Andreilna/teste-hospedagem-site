@@ -1,5 +1,7 @@
-// components/Sidebar/Sidebar.tsx
+// components/Sidebar/Sidebar.js
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./Sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,58 +15,116 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Sidebar() {
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleLogout = () => {
+    setShowConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    setShowConfirm(false);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token"); // limpa o token do localStorage
+      document.cookie = "token=; max-age=0; path=/; HttpOnly"; // limpa o cookie
+      window.location.href = "/"; // redireciona para a tela inicial
+    }
+  };
+
+  const cancelLogout = () => {
+    setShowConfirm(false);
+  };
+
   return (
-    <aside className={styles.sidebar}>
-      <div className={styles.logo}>G</div>
+    <>
+      <aside className={styles.sidebar}>
+        <div className={styles.logoContainer}>
+          <Image
+            src="/logo.jpg"
+            alt="Logo GreenRise"
+            width={70}
+            height={70}
+            className={styles.logo}
+            priority
+          />
+        </div>
 
-      <nav className={styles.menuWrapper} aria-label="Menu principal">
-        <ul className={styles.menuList}>
-          <li className={styles.menuItem}>
-            <FontAwesomeIcon icon={faHome} />
-            <Link href="/home" className={styles.link}>
-              Início
-            </Link>
-          </li>
+        <nav className={styles.menuWrapper} aria-label="Menu principal">
+          <ul className={styles.menuList}>
+            <li className={styles.menuItem}>
+              <FontAwesomeIcon icon={faHome} />
+              <Link href="/home" className={styles.link}>
+                Início
+              </Link>
+            </li>
 
-          <Link href="/growVegetable">
             <li className={styles.menuItem}>
               <FontAwesomeIcon icon={faLeaf} />
-              <div className={styles.link}>Adicionar Hortaliça</div>
+              <Link href="/growVegetable" className={styles.link}>
+                Adicionar Hortaliça
+              </Link>
             </li>
-          </Link>
-          <Link href="/vegetableList">
+
             <li className={styles.menuItem}>
               <FontAwesomeIcon icon={faList} />
-              <div className={styles.link}>Lista de Hortaliças</div>
+              <Link href="/vegetableList" className={styles.link}>
+                Lista de Hortaliças
+              </Link>
             </li>
-          </Link>
-          <Link href="/cameras">
+
             <li className={styles.menuItem}>
               <FontAwesomeIcon icon={faCamera} />
-              <div className={styles.link}>Câmeras</div>
+              <Link href="/cameras" className={styles.link}>
+                Câmeras
+              </Link>
             </li>
-          </Link>
-          <Link href="/reports">
+
             <li className={styles.menuItem}>
               <FontAwesomeIcon icon={faFileAlt} />
-              <div className={styles.link}>Relatórios</div>
+              <Link href="/reports" className={styles.link}>
+                Relatórios
+              </Link>
             </li>
-          </Link>
-          <Link href="/settings">
+
             <li className={styles.menuItem}>
               <FontAwesomeIcon icon={faCog} />
-              <div className={styles.link}>Configurações</div>
+              <Link href="/settings" className={styles.link}>
+                Configurações
+              </Link>
             </li>
-          </Link>
 
-          <Link href="/">
-            <li className={styles.menuItem}>
+            <li className={`${styles.menuItem} ${styles.logout}`} onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} />
-              <div className={styles.link}>Sair</div>
+              <span className={styles.link}>Sair</span>
             </li>
-          </Link>
-        </ul>
-      </nav>
-    </aside>
+          </ul>
+        </nav>
+      </aside>
+
+      {/* ===== POPUP DE CONFIRMAÇÃO ===== */}
+      {showConfirm && (
+        <div className={styles.confirmOverlay}>
+          <div className={styles.confirmBox}>
+            <h3 className={styles.confirmTitle}>Deseja realmente sair?</h3>
+            <p className={styles.confirmText}>
+              Você será desconectado da sua conta GreenRise.
+            </p>
+            <div className={styles.confirmButtons}>
+              <button
+                className={`${styles.confirmBtn} ${styles.cancel}`}
+                onClick={cancelLogout}
+              >
+                Cancelar
+              </button>
+              <button
+                className={`${styles.confirmBtn} ${styles.confirm}`}
+                onClick={confirmLogout}
+              >
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

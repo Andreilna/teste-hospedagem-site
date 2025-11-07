@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 import styles from "../styles/Home.module.css";
+
 import Sidebar from "../components/Sidebar/Sidebar";
 import Header from "../components/Header/Header";
 import VegetableSelector from "../components/VegetableSelector/VegetableSelector";
@@ -10,25 +13,38 @@ import Alerts from "../components/Alerts/Alerts";
 import CameraPreview from "../components/CameraPreview/CameraPreview";
 import SensorDetails from "../components/SensorDetails/SensorDetails";
 import RecentReports from "../components/RecentReports/RecentReports";
-import { parse } from "cookie";
-import jwt from "jsonwebtoken";
 
 export default function Home() {
+  const router = useRouter();
   const [selectedVegetable, setSelectedVegetable] = useState(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // ✅ Proteção de rota (verifica token ao carregar a página)
+  useEffect(() => {
+    const token = Cookies.get("token") || localStorage.getItem("token");
+
+    if (!token) {
+      router.replace("/"); // se não tiver token, volta pro login
+    } else {
+      setIsCheckingAuth(false); // autorizado a renderizar o conteúdo
+    }
+  }, [router]);
 
   const handleVegetableSelect = (vegetable) => setSelectedVegetable(vegetable);
 
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      document.cookie = "token=; max-age=0; path=/; HttpOnly";
-      window.location.href = "/"; // volta para login
-    }
-  };
+  // Tela de carregamento enquanto verifica autenticação
+  if (isCheckingAuth) {
+    return (
+      <div className={styles.loadingScreen}>
+        <div className={styles.spinner}></div>
+        <p>Verificando acesso...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.dashboard}>
-      <Sidebar onLogout={handleLogout} />
+      <Sidebar />
       <main className={styles.mainContent}>
         <Header />
         <div className={styles.selectorContainer}>
@@ -37,23 +53,28 @@ export default function Home() {
             selectedVegetable={selectedVegetable}
           />
         </div>
+
         <div className={styles.top}>
           <div className={styles.chartArea}>
             <GrowthChart selectedVegetable={selectedVegetable} />
             <WaterLevelChart selectedVegetable={selectedVegetable} />
           </div>
+
           <div className={styles.rightColumn}>
             <Indicators selectedVegetable={selectedVegetable} />
             <Alerts selectedVegetable={selectedVegetable} />
           </div>
         </div>
+
         <div className={styles.bottom}>
           <div className={styles.tile}>
             <CameraPreview selectedVegetable={selectedVegetable} />
           </div>
+
           <div className={styles.tile}>
             <SensorDetails selectedVegetable={selectedVegetable} />
           </div>
+
           <div className={styles.tile}>
             <RecentReports selectedVegetable={selectedVegetable} />
           </div>
@@ -61,29 +82,4 @@ export default function Home() {
       </main>
     </div>
   );
-}
-
-export async function getServerSideProps({ req, res }) {
-  const cookiesHeader = req.headers.cookie || "";
-  const cookies = parse(cookiesHeader);
-  const token = cookies.token;
-
-  if (!token) {
-    return { redirect: { destination: "/", permanent: false } };
-  }
-
-  try {
-    const SECRET = process.env.JWT_SECRET;
-    if (!SECRET) throw new Error("JWT_SECRET não configurado");
-
-    jwt.verify(token, SECRET);
-    return { props: {} }; // Token válido
-  } catch (err) {
-    console.error("Erro de verificação JWT:", err.message);
-
-    // Limpa o cookie inválido
-    res.setHeader("Set-Cookie", "token=; Max-Age=0; Path=/; HttpOnly");
-
-    return { redirect: { destination: "/", permanent: false } };
-  }
 }

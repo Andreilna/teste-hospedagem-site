@@ -1,104 +1,129 @@
 /* ===== Variáveis e base ===== */
-:root{
+:root {
   --gap: 16px;                 /* respiro global mais compacto */
   --gap-lg: 20px;
   --sidebar-w: 220px;
   --sidebar-w-collapsed: 72px;
 }
 
-.dashboard{
-  display:flex;
-  min-height:100dvh;
-  background:#e5edf5;
-  overflow-x:hidden;
+.dashboard {
+  display: flex;
+  min-height: 100dvh;
+  background: #e5edf5;
+  overflow-x: hidden;
 }
 
-.mainContent{
+.mainContent {
   margin-left: var(--sidebar-w);
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-  color:#212121;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: #212121;
 }
 
 /* Container do seletor de hortaliças */
-.selectorContainer{
+.selectorContainer {
   padding: var(--gap-lg) var(--gap-lg) 0;
-  min-width:0;
+  min-width: 0;
 }
 
 /* ===== Faixa superior: gráfico + coluna de indicadores/alertas ===== */
 /* Usa mais a largura: 2.2fr para o gráfico e 1fr pro painel direito */
-.top{
-  display:grid;
+.top {
+  display: grid;
   grid-template-columns: 2.2fr 1fr;
-  align-items:start;
+  align-items: start;
   gap: var(--gap-lg);
   padding: var(--gap-lg);
 }
 
 /* garante que o gráfico não faça overflow e organiza os gráficos verticalmente */
-.chartArea{ 
-  min-width:0; 
+.chartArea { 
+  min-width: 0; 
   display: flex;
   flex-direction: column;
   gap: var(--gap-lg);
 }
 
 /* coluna direita mais compacta */
-.rightColumn{
-  display:grid;
+.rightColumn {
+  display: grid;
   grid-auto-rows: minmax(0, auto);
   gap: var(--gap);
-  min-width:0;
+  min-width: 0;
 }
 
 /* ===== Faixa inferior: cards “câmeras / sensores / relatórios” ===== */
 /* 2fr 1fr 1fr preenche a largura e organiza bem a hierarquia */
-.bottom{
-  display:grid;
+.bottom {
+  display: grid;
   gap: var(--gap-lg);
   padding: 0 var(--gap-lg) var(--gap-lg);
   grid-template-columns: 2fr 1fr 1fr;
-  align-items:start;
+  align-items: start;
 }
 
 /* azulejos nunca estouram a coluna, mesmo com gráficos/tabelas internos */
-.tile{ min-width:0; }
+.tile {
+  min-width: 0;
+}
 
 /* ===== Ajustes de densidade para telas grandes ===== */
-@media (min-width: 1440px){
-  :root{ --gap:18px; --gap-lg:24px; }
-  .top{ grid-template-columns: 2.4fr 1fr; }
-  .bottom{ grid-template-columns: 2.2fr 1fr 1fr; }
+@media (min-width: 1440px) {
+  :root {
+    --gap: 18px;
+    --gap-lg: 24px;
+  }
+  .top {
+    grid-template-columns: 2.4fr 1fr;
+  }
+  .bottom {
+    grid-template-columns: 2.2fr 1fr 1fr;
+  }
 }
 
 /* ===== Responsividade ===== */
-@media (max-width: 1200px){
-  .top{ grid-template-columns: 1.7fr 1fr; }
-  .bottom{ grid-template-columns: 1.5fr 1fr; } /* câmeras + (sensores/relatórios) */
+@media (max-width: 1200px) {
+  .top {
+    grid-template-columns: 1.7fr 1fr;
+  }
+  .bottom {
+    grid-template-columns: 1.5fr 1fr; /* câmeras + (sensores/relatórios) */
+  }
 }
 
-@media (max-width: 1024px){
-  .mainContent{ margin-left: var(--sidebar-w-collapsed); }
-  .top{
+@media (max-width: 1024px) {
+  .mainContent {
+    margin-left: var(--sidebar-w-collapsed);
+  }
+  .top {
     grid-template-columns: 1fr;   /* empilha gráfico e painel direito */
     gap: var(--gap);
   }
-  .rightColumn{
-    grid-template-columns: repeat(2, minmax(0,1fr));
+  .rightColumn {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--gap);
   }
-  .bottom{
-    grid-template-columns: repeat(2, minmax(0,1fr));
+  .bottom {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--gap);
   }
 }
 
-@media (max-width: 720px){
-  .rightColumn{ grid-template-columns: 1fr; }
-  .bottom{ grid-template-columns: 1fr; }
-  :root{ --gap:14px; --gap-lg:16px; }
-  .top, .bottom{ padding: var(--gap-lg); }
+@media (max-width: 720px) {
+  .rightColumn {
+    grid-template-columns: 1fr;
+  }
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+  :root {
+    --gap: 14px;
+    --gap-lg: 16px;
+  }
+  .top,
+  .bottom {
+    padding: var(--gap-lg);
+  }
 }
