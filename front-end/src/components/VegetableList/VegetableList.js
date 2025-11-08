@@ -17,6 +17,8 @@ import {
 
 // Helper da API
 import { apiFetch } from "@/services/api";
+import ConfirmModal from "@/components/ConfirmModal/ConfirmModal";
+import { useToast } from "@/components/ToastContainer/ToastContainer";
 
 import styles from "@/components/VegetableList/VegetableList.module.css";
 
@@ -25,6 +27,8 @@ const VegetableList = () => {
   const [hortalicas, setHortalicas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const { showToast } = useToast();
 
   // Função para buscar hortaliças
   const fetchHortalicas = async () => {
@@ -47,21 +51,29 @@ const VegetableList = () => {
   };
 
   // Função para deletar hortaliça
-  const handleDelete = async (id) => {
-    if (!window.confirm("Tem certeza que deseja excluir esta hortaliça?")) {
-      return;
-    }
+  const handleDelete = (id) => {
+    setDeleteConfirm(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
 
     try {
-      await apiFetch(`/hortalicas/${id}`, {
+      await apiFetch(`/hortalicas/${deleteConfirm}`, {
         method: "DELETE",
       });
-      alert("Hortaliça excluída com sucesso!");
+      showToast("Hortaliça excluída com sucesso!", "success", 3000);
+      setDeleteConfirm(null);
       fetchHortalicas(); // Recarrega a lista
     } catch (err) {
       console.error("Erro ao excluir hortaliça:", err);
-      alert(err.message);
+      showToast(err.message || "Erro ao excluir hortaliça", "error", 5000);
+      setDeleteConfirm(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm(null);
   };
 
   // Carrega as hortaliças quando o componente monta
@@ -232,6 +244,16 @@ const VegetableList = () => {
           </div>
         ))}
       </div>
+
+      {deleteConfirm && (
+        <ConfirmModal
+          message="Tem certeza que deseja excluir esta hortaliça?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+          confirmText="Excluir"
+          cancelText="Cancelar"
+        />
+      )}
     </div>
   );
 };

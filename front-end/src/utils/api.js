@@ -22,8 +22,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Se receber erro 401, token inválido ou expirado
-    if (error.response?.status === 401) {
+    // Não interfere em erros de login (página inicial)
+    const isLoginPage = typeof window !== "undefined" && window.location.pathname === "/";
+    
+    // Se receber erro 401 e NÃO estiver na página de login, redireciona
+    if (error.response?.status === 401 && !isLoginPage) {
       // Limpa token do localStorage e cookie
       if (typeof window !== "undefined") {
         localStorage.removeItem("token");
@@ -34,6 +37,8 @@ api.interceptors.response.use(
         window.location.href = "/";
       }
     }
+    // Para erros de login (404, 401), apenas rejeita a promise normalmente
+    // sem fazer redirecionamento
     return Promise.reject(error);
   }
 );

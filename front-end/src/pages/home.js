@@ -18,6 +18,10 @@ export default function Home() {
   const router = useRouter();
   const [selectedVegetable, setSelectedVegetable] = useState(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  // No mobile: controla se o drawer está aberto
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // No desktop: controla se a sidebar está colapsada (apenas ícones)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // ✅ Proteção de rota (verifica token ao carregar a página)
   useEffect(() => {
@@ -42,11 +46,36 @@ export default function Home() {
     );
   }
 
+  const toggleSidebar = () => {
+    // Detecta se está no mobile
+    const isMobileView = typeof window !== 'undefined' && window.innerWidth <= 1024;
+    
+    if (isMobileView) {
+      // No mobile: abre/fecha o drawer
+      setIsSidebarOpen(!isSidebarOpen);
+    } else {
+      // No desktop: colapsa/expande a sidebar
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
     <div className={styles.dashboard}>
-      <Sidebar />
-      <main className={styles.mainContent}>
-        <Header />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={closeSidebar} 
+        isCollapsed={isSidebarCollapsed}
+      />
+      <main className={styles.mainContent} data-sidebar-collapsed={isSidebarCollapsed}>
+        <Header 
+          onMenuClick={toggleSidebar} 
+          isSidebarOpen={isSidebarOpen}
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
         <div className={styles.selectorContainer}>
           <VegetableSelector
             onVegetableSelect={handleVegetableSelect}

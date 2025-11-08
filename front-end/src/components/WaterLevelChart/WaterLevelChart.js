@@ -18,6 +18,7 @@ import {
   FaCalendarAlt
 } from 'react-icons/fa';
 import { apiFetch } from '@/services/api';
+import { useToast } from '@/components/ToastContainer/ToastContainer';
 import styles from './WaterLevelChart.module.css';
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip);
@@ -28,6 +29,7 @@ const WaterLevelChart = ({ selectedVegetable }) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const { showToast } = useToast();
 
   // Dados padrão para quando não há hortaliça selecionada
   const defaultData = {
@@ -131,13 +133,13 @@ const WaterLevelChart = ({ selectedVegetable }) => {
 
   const handleSaveWaterLevel = async () => {
     if (!selectedVegetable) {
-      alert('Selecione uma hortaliça primeiro');
+      showToast('Selecione uma hortaliça primeiro', 'warning', 4000);
       return;
     }
 
     const level = parseFloat(waterLevel);
     if (isNaN(level) || level < 0 || level > 200) {
-      alert('Nível da água deve estar entre 0 e 200 litros');
+      showToast('Nível da água deve estar entre 0 e 200 litros', 'error', 4000);
       return;
     }
 
@@ -161,7 +163,7 @@ const WaterLevelChart = ({ selectedVegetable }) => {
         })
       });
       
-      alert('Nível da água atualizado com sucesso!');
+      showToast('Nível da água atualizado com sucesso!', 'success', 3000);
       
       // Gera novo histórico baseado no nível atualizado
       setWaterHistory(generateMockHistory(level));
@@ -169,7 +171,7 @@ const WaterLevelChart = ({ selectedVegetable }) => {
     } catch (err) {
       console.error('Erro ao salvar nível da água:', err);
       setError('Erro ao salvar nível da água');
-      alert('Erro ao salvar nível da água');
+      showToast('Erro ao salvar nível da água', 'error', 5000);
     } finally {
       setSaving(false);
     }

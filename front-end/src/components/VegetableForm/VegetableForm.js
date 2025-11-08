@@ -16,6 +16,7 @@ import {
 
 // Helper da API (usa NEXT_PUBLIC_API_BASE_URL e token do localStorage/env)
 import { apiFetch } from "@/services/api";
+import { useToast } from "@/components/ToastContainer/ToastContainer";
 
 import styles from "@/components/VegetableForm/VegetableForm.module.css"; // CSS Module
 
@@ -33,6 +34,7 @@ const VegetableForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const { showToast } = useToast();
   const tipoOptions = ["Folhosa", "Fruto", "Raiz", "Bulbo", "Leguminosa", "Outros"];
 
 
@@ -132,11 +134,11 @@ const VegetableForm = () => {
       //   body: JSON.stringify(payload),
       // });
 
-      alert("Hortaliça cadastrada com sucesso!");
+      showToast("Hortaliça cadastrada com sucesso!", "success", 3000);
       handleReset();
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      showToast(err.message || "Erro ao cadastrar hortaliça", "error", 5000);
     }
   }
 

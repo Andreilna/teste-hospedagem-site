@@ -1,0 +1,89 @@
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: white;
+  min-width: 300px;
+  max-width: 500px;
+  animation: slideIn 0.3s ease-out;
+  position: relative;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  color: #333;
+}
+
+/* Tipos de toast */
+.success {
+  border-left: 4px solid #4CAF50;
+}
+
+.success .icon {
+  color: #4CAF50;
+}
+
+.error {
+  border-left: 4px solid #f44336;
+}
+
+.error .icon {
+  color: #f44336;
+}
+
+.warning {
+  border-left: 4px solid #ff9800;
+}
+
+.warning .icon {
+  color: #ff9800;
+}
+
+.info {
+  border-left: 4px solid #2196F3;
+}
+
+.info .icon {
+  color: #2196F3;
+}
+

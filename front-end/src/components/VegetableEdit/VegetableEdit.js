@@ -20,6 +20,7 @@ import {
 
 // Helper da API
 import { apiFetch } from "@/services/api";
+import { useToast } from "@/components/ToastContainer/ToastContainer";
 
 import styles from "@/components/VegetableEdit/VegetableEdit.module.css";
 
@@ -43,6 +44,7 @@ const VegetableEdit = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const { showToast } = useToast();
   
   const tipoOptions = ["Folhosa", "Fruto", "Raiz", "Bulbo", "Leguminosa", "Outros"];
 
@@ -174,11 +176,13 @@ const VegetableEdit = () => {
         body: JSON.stringify(payload),
       });
 
-      alert("Hortaliça atualizada com sucesso!");
-      router.push("/vegetableList");
+      showToast("Hortaliça atualizada com sucesso!", "success", 3000);
+      setTimeout(() => {
+        router.push("/vegetableList");
+      }, 1000);
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      showToast(err.message || "Erro ao atualizar hortaliça", "error", 5000);
     } finally {
       setSaving(false);
     }

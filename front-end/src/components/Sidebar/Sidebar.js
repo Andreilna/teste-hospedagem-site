@@ -1,7 +1,7 @@
-// components/Sidebar/Sidebar.js
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 import styles from "./Sidebar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,9 +13,37 @@ import {
   faSignOutAlt,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
+import ConfirmModal from "../ConfirmModal/ConfirmModal";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose, isCollapsed }) {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const sidebarRef = useRef(null);
+  const router = useRouter();
+
+  // Menu items organizados por seção
+  const menuItems = {
+    principal: [
+      { icon: faHome, label: "Início", href: "/home" },
+      { icon: faLeaf, label: "Adicionar Hortaliça", href: "/growVegetable" },
+      { icon: faList, label: "Lista de Hortaliças", href: "/vegetableList" },
+    ],
+    secundario: [
+      { icon: faCamera, label: "Câmeras", href: "/cameras" },
+      { icon: faFileAlt, label: "Relatórios", href: "/reports" },
+      { icon: faCog, label: "Configurações", href: "/settings" },
+    ],
+  };
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleLogout = () => {
     setShowConfirm(true);
@@ -24,9 +52,9 @@ export default function Sidebar() {
   const confirmLogout = () => {
     setShowConfirm(false);
     if (typeof window !== "undefined") {
-      localStorage.removeItem("token"); // limpa o token do localStorage
-      document.cookie = "token=; max-age=0; path=/; HttpOnly"; // limpa o cookie
-      window.location.href = "/"; // redireciona para a tela inicial
+      localStorage.removeItem("token");
+      Cookies.remove("token");
+      router.push("/"); // redireciona suavemente para o login
     }
   };
 
@@ -34,96 +62,164 @@ export default function Sidebar() {
     setShowConfirm(false);
   };
 
+  // Fecha a sidebar ao clicar fora (apenas mobile)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isMobile &&
+        isOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target)
+      ) {
+        const menuButton = document.querySelector("[data-menu-button]");
+        if (menuButton && !menuButton.contains(event.target)) {
+          onClose();
+        }
+      }
+    };
+
+    if (isMobile && isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "";
+    };
+  }, [isMobile, isOpen, onClose]);
+
+  // Fecha ao pressionar ESC (mobile)
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (isMobile && event.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [isMobile, isOpen, onClose]);
+
   return (
     <>
-      <aside className={styles.sidebar}>
-        <div className={styles.logoContainer}>
-          <Image
-            src="/logo.jpg"
-            alt="Logo GreenRise"
-            width={70}
-            height={70}
-            className={styles.logo}
-            priority
-          />
-        </div>
+      {/* ===== Overlay para mobile ===== */}
+      {isOpen && <div className={styles.overlay} onClick={onClose} />}
 
-        <nav className={styles.menuWrapper} aria-label="Menu principal">
+      <aside
+        ref={sidebarRef}
+        className={`${styles.sidebar} ${
+          isOpen ? styles.open : ""
+        } ${isCollapsed ? styles.collapsed : ""}`}
+      >
+        {/* ===== Logo / Marca ===== */}
+<div className={styles.brandSection}>
+  <div className={styles.logoContainer}>
+    <img
+      src="/logo.jpg"
+      alt="Logo GreenRise"
+      className={`${styles.logo} ${isCollapsed ? styles.logoCollapsed : ""}`}
+    />
+  </div>
+
+  {!isCollapsed && (
+    <div className={styles.brandText}>
+      <h3 className={styles.brandTitle}>GreenRise</h3>
+      <p className={styles.brandSubtitle}>Gestão de Estufa</p>
+    </div>
+  )}
+</div>
+  
+
+        {/* ===== Menu Principal ===== */}
+        <nav className={styles.menuWrapper} aria-label="Menu de navegação">
           <ul className={styles.menuList}>
-            <li className={styles.menuItem}>
-              <FontAwesomeIcon icon={faHome} />
-              <Link href="/home" className={styles.link}>
-                Início
-              </Link>
+            {/* Seção Principal */}
+            {menuItems.principal.map((item) => {
+              const isActive = router.pathname === item.href;
+              return (
+                <li
+                  key={item.href}
+                  className={`${styles.menuItem} ${
+                    isActive ? styles.active : ""
+                  }`}
+                  title={item.label}
+                >
+                  <Link
+                    href={item.href}
+                    className={styles.link}
+                    onClick={() => isMobile && onClose()}
+                  >
+                    <span className={styles.iconWrapper}>
+                      <FontAwesomeIcon icon={item.icon} />
+                    </span>
+                    <span className={styles.linkText}>{item.label}</span>
+                    {isActive && <span className={styles.activeIndicator} />}
+                  </Link>
+                </li>
+              );
+            })}
+
+            {/* Separador */}
+            <li className={styles.separator}>
+              <div className={styles.separatorLine} />
             </li>
 
-            <li className={styles.menuItem}>
-              <FontAwesomeIcon icon={faLeaf} />
-              <Link href="/growVegetable" className={styles.link}>
-                Adicionar Hortaliça
-              </Link>
-            </li>
-
-            <li className={styles.menuItem}>
-              <FontAwesomeIcon icon={faList} />
-              <Link href="/vegetableList" className={styles.link}>
-                Lista de Hortaliças
-              </Link>
-            </li>
-
-            <li className={styles.menuItem}>
-              <FontAwesomeIcon icon={faCamera} />
-              <Link href="/cameras" className={styles.link}>
-                Câmeras
-              </Link>
-            </li>
-
-            <li className={styles.menuItem}>
-              <FontAwesomeIcon icon={faFileAlt} />
-              <Link href="/reports" className={styles.link}>
-                Relatórios
-              </Link>
-            </li>
-
-            <li className={styles.menuItem}>
-              <FontAwesomeIcon icon={faCog} />
-              <Link href="/settings" className={styles.link}>
-                Configurações
-              </Link>
-            </li>
-
-            <li className={`${styles.menuItem} ${styles.logout}`} onClick={handleLogout}>
-              <FontAwesomeIcon icon={faSignOutAlt} />
-              <span className={styles.link}>Sair</span>
-            </li>
+            {/* Seção Secundária */}
+            {menuItems.secundario.map((item) => {
+              const isActive = router.pathname === item.href;
+              return (
+                <li
+                  key={item.href}
+                  className={`${styles.menuItem} ${
+                    isActive ? styles.active : ""
+                  }`}
+                  title={item.label}
+                >
+                  <Link
+                    href={item.href}
+                    className={styles.link}
+                    onClick={() => isMobile && onClose()}
+                  >
+                    <span className={styles.iconWrapper}>
+                      <FontAwesomeIcon icon={item.icon} />
+                    </span>
+                    <span className={styles.linkText}>{item.label}</span>
+                    {isActive && <span className={styles.activeIndicator} />}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
+
+        {/* ===== Footer com Logout ===== */}
+        <div className={styles.footerSection}>
+          <button
+            className={`${styles.menuItem} ${styles.logout}`}
+            onClick={handleLogout}
+            title="Sair"
+            type="button"
+          >
+            <span className={styles.iconWrapper}>
+              <FontAwesomeIcon icon={faSignOutAlt} />
+            </span>
+            <span className={styles.linkText}>Sair</span>
+          </button>
+        </div>
       </aside>
 
       {/* ===== POPUP DE CONFIRMAÇÃO ===== */}
       {showConfirm && (
-        <div className={styles.confirmOverlay}>
-          <div className={styles.confirmBox}>
-            <h3 className={styles.confirmTitle}>Deseja realmente sair?</h3>
-            <p className={styles.confirmText}>
-              Você será desconectado da sua conta GreenRise.
-            </p>
-            <div className={styles.confirmButtons}>
-              <button
-                className={`${styles.confirmBtn} ${styles.cancel}`}
-                onClick={cancelLogout}
-              >
-                Cancelar
-              </button>
-              <button
-                className={`${styles.confirmBtn} ${styles.confirm}`}
-                onClick={confirmLogout}
-              >
-                Sair
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          message="Deseja realmente sair? Você será desconectado da sua conta GreenRise."
+          onConfirm={confirmLogout}
+          onCancel={cancelLogout}
+          confirmText="Sair"
+          cancelText="Cancelar"
+        />
       )}
     </>
   );

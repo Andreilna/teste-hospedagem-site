@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Cookies from 'js-cookie';
+import { ToastProvider } from '@/components/ToastContainer/ToastContainer';
 
 // Rotas públicas (login, etc.)
 const PUBLIC_PAGES = ['/'];
@@ -79,11 +80,11 @@ export default function App({ Component, pageProps }) {
   }
 
   return (
-    <>
+    <ToastProvider>
       <Head>
         <title>Greenrise</title>
       </Head>
       <Component {...pageProps} />
-    </>
+    </ToastProvider>
   );
 }
